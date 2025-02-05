@@ -1,6 +1,7 @@
 package com.stage.one;
 
 import org.springframework.http.HttpEntity;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,19 +27,20 @@ public class NumberController {
           //return new ResponseEntity.status(Http.)
           return ResponseEntity.badRequest().body(new ErrorResponse(number, true));
       }
+
         // Validate that the input is a valid number
         int num;
         try {
             num = Integer.parseInt(number);
+
         } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().body(new ErrorResponse(number, true));
+            try {
+                float floatNumber = Float.parseFloat(number);
+                num = (int) floatNumber;
+            } catch (NumberFormatException ex) {
+                return ResponseEntity.badRequest().body(new ErrorResponse(number, true));
+            }
         }
-
-        // Validate number to be non-negative
-        if (num < 0) {
-            return ResponseEntity.badRequest().body(new ErrorResponse(number, true));
-        }
-
         // Determine if the number is prime
         boolean isPrime = isPrime(num);
 
@@ -74,7 +77,10 @@ public class NumberController {
         return true;
     }
 
+
+
     // Helper method to check if a number is perfect
+
     private boolean isPerfect(int number) {
         int sum = 0;
         for (int i = 1; i <= number / 2; i++) {

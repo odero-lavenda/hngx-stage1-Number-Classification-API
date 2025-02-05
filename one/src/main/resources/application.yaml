@@ -1,0 +1,5 @@
+spring:
+  application:
+        name: one
+server:
+ port: 3000

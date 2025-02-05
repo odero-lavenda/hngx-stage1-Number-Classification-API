@@ -1,5 +1,6 @@
 package com.stage.one;
 
+import org.springframework.http.HttpEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,7 +20,11 @@ public class NumberController {
     private static final Logger logger = LoggerFactory.getLogger(NumberController.class);
 
     @GetMapping("/api/classify-number")
-    public ResponseEntity<?> classifyNumber(@RequestParam String number) {
+    public ResponseEntity<?> classifyNumber(@RequestParam(value = "number", required = false) String number) {
+      if (number == null || number.isEmpty()){
+          //return new ResponseEntity.status(Http.)
+          return ResponseEntity.badRequest().body(new ErrorResponse(number, true));
+      }
         // Validate that the input is a valid number
         int num;
         try {
@@ -115,43 +120,43 @@ public class NumberController {
     // Inner class to represent the response JSON
     public static class NumberInfo {
         private int number;
-        private boolean isPrime;
-        private boolean isPerfect;
+        private boolean is_prime;
+        private boolean is_perfect;
         private List<String> properties;
-        private int digitSum;
-        private String funFact;
+        private int digit_sum;
+        private String fun_fact;
 
-        public NumberInfo(int number, boolean isPrime, boolean isPerfect, List<String> properties, int digitSum, String funFact) {
+        public NumberInfo(int number, boolean is_prime, boolean is_perfect, List<String> properties, int digit_sum, String fun_fact) {
             this.number = number;
-            this.isPrime = isPrime;
-            this.isPerfect = isPerfect;
+            this.is_prime = is_prime;
+            this.is_perfect = is_perfect;
             this.properties = properties;
-            this.digitSum = digitSum;
-            this.funFact = funFact != null ? funFact : "No fun fact available";
+            this.digit_sum = digit_sum;
+            this.fun_fact = fun_fact != null ? fun_fact : "No fun fact available";
         }
 
         public int getNumber() {
             return number;
         }
 
-        public boolean isPrime() {
-            return isPrime;
+        public boolean isIs_prime() {
+            return is_prime;
         }
 
-        public boolean isPerfect() {
-            return isPerfect;
+        public boolean isIs_perfect() {
+            return is_perfect;
         }
 
         public List<String> getProperties() {
             return properties;
         }
 
-        public int getDigitSum() {
-            return digitSum;
+        public int getDigit_sum() {
+            return digit_sum;
         }
 
-        public String getFunFact() {
-            return funFact;
+        public String getFun_fact() {
+            return fun_fact;
         }
     }
 
